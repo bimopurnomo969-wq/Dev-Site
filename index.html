@@ -2,6 +2,8 @@
 <html lang="id"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#050305">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://challenges.cloudflare.com https://itunes.apple.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob: https://*.supabase.co https://api.qrserver.com; media-src 'self' blob: https://*.supabase.co https://*.itunes.apple.com https://*.mzstatic.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.open-meteo.com https://geocoding-api.open-meteo.com https://api.aladhan.com https://open.er-api.com https://api.mymemory.translated.net https://id.wikipedia.org https://api.ipify.org https://dns.google; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<script>if(top!==self){try{top.location=self.location}catch(e){document.documentElement.remove()}}</script>
 <title>ChronoXStar</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
@@ -181,6 +183,29 @@ nav .bd{position:absolute;top:6px;left:58%;width:8px;height:8px;border-radius:50
 .ic{position:relative;margin-top:12px;padding:14px;animation:pop .35s ease both}
 .ic h3{font:800 15px var(--d);letter-spacing:.04em;padding-right:50px}.ic p{white-space:pre-wrap;word-break:break-word;margin:6px 0 10px;color:#d6e0f7;font-size:14px}
 .ic.new{border-color:var(--r);box-shadow:0 0 20px #ff2e4833}#inf{margin-bottom:6px}
+
+/* tablet + desktop */
+@media(min-width:600px){#tgrid{grid-template-columns:repeat(3,1fr)}}
+@media(hover:hover){.btn:hover{border-color:#ff2e4899;box-shadow:0 0 16px #ff2e4833}.fc:hover,.wide:hover,.tr:hover{border-color:#ff2e4877;transform:translateY(-2px)}nav button:hover{color:var(--t)}}
+@media(min-width:900px){
+ body{max-width:1180px;padding:0 24px 28px 236px}
+ header{margin:0 -24px 0 -236px;padding:12px 24px}
+ nav{top:86px;bottom:auto;left:max(24px,calc(50vw - 566px));right:auto;width:200px;margin:0;flex-direction:column;gap:4px;padding:10px;border:1px solid #22314f;border-radius:20px;background:#080e1ecc;backdrop-filter:blur(10px)}
+ nav button{display:flex;align-items:center;gap:12px;text-align:left;font-size:12px;padding:12px 14px;border-radius:12px;flex:none}
+ nav svg{margin:0;flex:none}nav .on{background:#ff2e4814}
+ nav .on:before{top:22%;bottom:22%;left:0;right:auto;width:3px;height:auto}nav .bd{top:12px;left:36px}
+ .v{padding:18px 0}
+ #v-home{display:grid;grid-template-columns:1.5fr 1fr;gap:14px;align-items:start}
+ #v-home>*{margin-top:0!important}#v-home .ucard{grid-column:1/-1}#v-home .feed{grid-column:1;grid-row:2/span 6}#v-home>:not(.ucard):not(.feed){grid-column:2}
+ .wm{font-size:clamp(34px,4.2vw,58px)}.feed .hero{aspect-ratio:16/9}
+ #tgrid{grid-template-columns:repeat(4,1fr)}#tl-run{max-width:680px}
+ #v-chat,#v-info{max-width:860px}#msgs{height:calc(100vh - 290px)}#msgs .m{max-width:72%}
+ #ilist{display:grid;grid-template-columns:1fr 1fr;gap:12px}#ilist .ic{margin-top:0}
+ #v-music{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}#v-music .sec{grid-column:1/-1}#v-music .card{margin-top:0}
+ #me,#ad{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}#me>*,#ad>*{margin-top:0!important}#ad>.row{grid-column:1/-1}
+ #ts{bottom:24px}#nm{bottom:80px}
+}
+@media(min-width:1400px){body{max-width:1280px}nav{left:max(24px,calc(50vw - 616px))}}
 </style></head><body>
 <canvas id="fx"></canvas>
 <div id="boot"><div class="bgtxt">CHRONO XSTAR</div><button class="skip" id="bskip">Lewati</button>
@@ -277,7 +302,7 @@ async function loadS(){const{data}=await sb.from('settings').select('*');(data||
  $('#l-wa').href='https://wa.me/'+S.admin_wa.replace(/\D/g,'');$('#l-ig').href='https://instagram.com/'+enc(S.ig.replace(/[^\w.]/g,''))}
 
 /* Auth */
-let cq=0,cTok=null,t0f=Date.now();
+let cq=0,cTok=null,t0f=Date.now(),fails=0,lockUntil=0;
 const newQ=()=>{const a=2+Math.random()*8|0,b=2+Math.random()*8|0;cq=a+b;$('#hq').textContent='Verifikasi manusia: '+a+' + '+b+' = ?';$('#ha').value=''};
 function authMode(r){reg=r;t0f=Date.now();$('#au').hidden=!r;$('#hc').hidden=!(r&&!TURNSTILE_SITEKEY);if(r&&!TURNSTILE_SITEKEY)newQ();
  $('#am-t').textContent=r?'Daftar':'Masuk';$('#am-sw').textContent=r?'Sudah punya akun? Masuk':'Belum punya akun? Daftar';$('#ap').autocomplete=r?'new-password':'current-password'}
@@ -286,7 +311,7 @@ if(TURNSTILE_SITEKEY){const s=document.createElement('script');s.src='https://ch
 $('#lg').onclick=()=>me?go('me'):$('#am').showModal();
 $('#af').onsubmit=async e=>{e.preventDefault();if($('#hp').value)return;
  const em=$('#ae').value.trim(),pw=$('#ap').value,un=$('#au').value.trim().toLowerCase(),opt={};
- if(TURNSTILE_SITEKEY){if(!cTok)return toast('Selesaikan verifikasi dulu');opt.captchaToken=cTok}
+ if(Date.now()<lockUntil)return toast('Terlalu banyak percobaan. Coba lagi '+Math.ceil((lockUntil-Date.now())/1000)+' detik');if(reg&&navigator.webdriver)return toast('Browser otomatis tidak diizinkan mendaftar');if(TURNSTILE_SITEKEY){if(!cTok)return toast('Selesaikan verifikasi dulu');opt.captchaToken=cTok}
  else if(reg){if(+$('#ha').value!==cq){newQ();return toast('Jawaban verifikasi salah')}if(Date.now()-t0f<4000)return toast('Terlalu cepat, coba lagi sebentar')}
  let r;
  if(reg){if(!/^\w{3,20}$/.test(un))return toast('Username 3-20 huruf/angka/_');if(pw.length<8)return toast('Password minimal 8 karakter');
@@ -294,10 +319,10 @@ $('#af').onsubmit=async e=>{e.preventDefault();if($('#hp').value)return;
   r=await sb.auth.signUp({email:em,password:pw,options:{...opt,data:{username:un}}})}
  else r=await sb.auth.signInWithPassword({email:em,password:pw,options:opt});
  if(TURNSTILE_SITEKEY){cTok=null;turnstile.reset()}
- if(r.error){if(reg&&!TURNSTILE_SITEKEY)newQ();return toast(r.error.message)}
+ if(r.error){if(reg&&!TURNSTILE_SITEKEY)newQ();if(!reg&&++fails>=5){lockUntil=Date.now()+60000;fails=0}return toast(r.error.message)}
  $('#am').close();const wr=reg;$('#af').reset();authMode(false);
  if(wr&&!r.data.session)return toast('Pendaftaran berhasil. Cek email untuk verifikasi, lalu masuk');
- toast('Berhasil masuk');await sb.rpc('log_event',{p_action:'login'})};
+ toast('Berhasil masuk');fails=0;await sb.rpc('log_event',{p_action:'login',p_detail:DEV.info})};
 async function setUser(u){me=u||null;pf=null;
  if(me){let{data}=await sb.from('profiles').select('*').eq('id',me.id).maybeSingle();
   if(!data){const r=await sb.rpc('ensure_profile');data=r.data}
@@ -310,7 +335,7 @@ async function setUser(u){me=u||null;pf=null;
 /* Chat global */
 const SU=SB_URL+'/storage/v1/object/public/';
 const av=(p,id)=>{const i=id||p?.id||'';return p?.avatar_url&&p.avatar_url.startsWith(SU+'avatars/')?`<img class="pa" data-u="${i}" src="${esc(p.avatar_url)}" alt="">`:`<span class="pa" data-u="${i}">${esc(((p?.username||'?')[0]||'?').toUpperCase())}</span>`};
-let INFO=[];
+let INFO=[],INFO_ERR='';
 function pinned(){const e=$('#pin'),f=INFO[0];e.hidden=!f;if(f)e.innerHTML='<small>Informasi terbaru</small><br><b>'+esc(f.title)+'</b>'}
 function banner(){const u=S.banner_url;if(!u||!u.startsWith(SU+'site/'))return;
  if(S.banner_type==='image'){$('#hv')?.remove();if(!$('#hi'))$('#hero').insertAdjacentHTML('afterbegin','<img id="hi" alt="">');$('#hi').src=u}
@@ -320,7 +345,11 @@ function msgHTML(m){const p=P[m.user_id]||{};
  return`<div class="m${m.user_id===me?.id?' me':''}${p.role==='admin'?' adm':''}" data-id="${m.id}">${isAd()?`<button class="btn d x" data-del="${m.id}">hapus</button>`:''}${av(p,m.user_id)}<span class="u" data-u="${m.user_id}">${esc(p.username||'user')}</span>${bdg(p)} <span class="tm">${new Date(m.created_at).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</span><div>${esc(m.content)}</div></div>`}
 const near=()=>{const b=$('#msgs');return b.scrollHeight-b.scrollTop-b.clientHeight<140};
 function add(m){const b=$('#msgs');if(b.querySelector('[data-id="'+m.id+'"]'))return;const st=near()||m.user_id===me?.id;b.insertAdjacentHTML('beforeend',msgHTML(m));if(st)b.scrollTo({top:b.scrollHeight,behavior:'smooth'});else $('#nm').hidden=false}
-async function loadMsgs(){const{data}=await sb.from('messages').select('*').order('id',{ascending:false}).limit(100);const b=$('#msgs');b.innerHTML=(data||[]).reverse().map(msgHTML).join('');b.scrollTop=b.scrollHeight;$('#nm').hidden=true}
+async function loadMsgs(){const{data,error}=await sb.from('messages').select('*').order('id',{ascending:false}).limit(100);const b=$('#msgs');
+ if(error){b.innerHTML='<div class="card">Chat belum bisa dimuat: '+esc(error.message)+'<br>Jalankan setup.sql terbaru di Supabase.</div>';return}
+ b.innerHTML=(data||[]).reverse().map(msgHTML).join('');b.scrollTop=b.scrollHeight;$('#nm').hidden=true}
+async function pollMsgs(){const last=[...document.querySelectorAll('#msgs [data-id]')].pop()?.dataset.id||0;
+ const{data}=await sb.from('messages').select('*').gt('id',last).order('id',{ascending:true}).limit(50);for(const m of data||[]){if(!P[m.user_id])await profs();add(m)}}
 async function openChat(){$('#cg').hidden=!!me;$('#cf').hidden=!me;if(!me)return;
  $('#bn').hidden=!pf?.banned;$('#cfm').hidden=!!pf?.banned;
  await profs();$('#oc').textContent=Object.values(P).filter(p=>p.last_seen&&Date.now()-new Date(p.last_seen)<3e5).length+' member online';
@@ -346,8 +375,8 @@ function showP(id){const p=P[id];if(!p)return;$('#pm-b').innerHTML=`<div style="
 const ago2=t=>{const m=Math.round((Date.now()-new Date(t))/6e4);return m<1?'baru saja':m<60?m+' mnt lalu':m<1440?Math.round(m/60)+' jam lalu':new Date(t).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})};
 const seen=()=>{try{return localStorage.getItem('cx_seen')||''}catch{return''}};
 function infoBadge(){const f=INFO[0],n=!!f&&f.created_at>seen()&&cur!=='info';$('#ibd').hidden=!n;$('#ilv').hidden=!n;$('#ip').textContent=f?f.title:'Belum ada informasi';pinned()}
-async function loadInfo(){const{data}=await sb.from('info_posts').select('*').order('id',{ascending:false}).limit(30);INFO=data||[];if(cur==='info')renderInfo();else infoBadge()}
-function renderInfo(){$('#inf').hidden=!isAd();const s=seen();
+async function loadInfo(){const{data,error}=await sb.from('info_posts').select('*').order('id',{ascending:false}).limit(30);INFO_ERR=error?error.message:'';INFO=data||[];if(cur==='info')renderInfo();else infoBadge()}
+function renderInfo(){$('#inf').hidden=!isAd()||!!INFO_ERR;if(INFO_ERR){$('#ilist').innerHTML='<div class="card">Informasi belum bisa dimuat: '+esc(INFO_ERR)+'<br>Jalankan setup.sql terbaru di Supabase SQL Editor.</div>';return}const s=seen();
  $('#ilist').innerHTML=INFO.map(x=>`<div class="gl ic${x.created_at>s?' new':''}"><h3>${esc(x.title)}</h3><small>${ago2(x.created_at)}</small><p>${esc(x.body)}</p>${/^https:\/\//.test(x.link||'')?`<a class="btn p" href="${esc(x.link)}" target="_blank" rel="noopener">Buka tautan</a>`:''}${isAd()?`<button class="btn d x" data-idel="${x.id}">hapus</button>`:''}</div>`).join('')||'<div class="card">Belum ada informasi.</div>';
  if(INFO[0])try{localStorage.setItem('cx_seen',INFO[0].created_at)}catch{}infoBadge()}
 $('#inf').onsubmit=async e=>{e.preventDefault();const t=$('#it').value.trim(),b=$('#ib').value.trim(),l=$('#il').value.trim();
@@ -384,18 +413,26 @@ function renderMe(){const b=$('#me');
  $('#f-o').onclick=async()=>{await sb.auth.signOut();go('home')}}
 
 /* Dashboard admin (hak akses dijaga RLS + fungsi di setup.sql; member tidak bisa memakainya) */
-const AL={login:'masuk',register:'mendaftar',admin_add:'menjadikan admin',admin_remove:'mencabut admin',ban:'membatasi chat',unban:'membuka batasan',delete_user:'menghapus akun',clear_chat:'membersihkan chat',banner:'banner',settings:'pengaturan',info:'menerbitkan info'};
+const AL={login:'masuk',register:'mendaftar',admin_add:'menjadikan admin',admin_remove:'mencabut admin',ban:'membatasi chat',unban:'membuka batasan',delete_user:'menghapus akun',clear_chat:'membersihkan chat',banner:'mengubah banner',settings:'mengubah pengaturan',info:'menerbitkan info'};
 async function bannerUp(){const f=$('#bn-f').files[0];if(!f)return toast('Pilih file banner dulu');if(f.size>50*1024*1024)return toast('Maksimal 50 MB');
  const ext=(f.name.split('.').pop()||'bin').toLowerCase().replace(/[^a-z0-9]/g,''),path='banner/'+Date.now()+'.'+ext;toast('Mengunggah...');
  const{error}=await sb.storage.from('site').upload(path,f,{contentType:f.type});if(error)return toast(error.message);
  const old=S.banner_url,w=await sb.from('settings').upsert([{key:'banner_url',value:SU+'site/'+path},{key:'banner_type',value:f.type.startsWith('video/')?'video':'image'}]);
  if(w.error)return toast(w.error.message);
  if(old&&old.startsWith(SU+'site/'))await sb.storage.from('site').remove([old.slice((SU+'site/').length)]);
- await sb.rpc('log_event',{p_action:'banner',p_detail:'banner diganti'});location.reload()}
+ await sb.rpc('log_event',{p_action:'banner',p_detail:'diganti'});location.reload()}
 async function bannerReset(){if(!confirm('Kembalikan banner awal?'))return;const old=S.banner_url;
  const w=await sb.from('settings').upsert([{key:'banner_url',value:''},{key:'banner_type',value:''}]);if(w.error)return toast(w.error.message);
  if(old&&old.startsWith(SU+'site/'))await sb.storage.from('site').remove([old.slice((SU+'site/').length)]);
- await sb.rpc('log_event',{p_action:'banner',p_detail:'banner dikembalikan'});location.reload()}
+ await sb.rpc('log_event',{p_action:'banner',p_detail:'dikembalikan ke awal'});location.reload()}
+async function healthCheck(){const o=$('#hc-out');o.textContent='Memeriksa...';const R=[];
+ const C=async(n,fn,hint)=>{try{const r=await fn();R.push([n,!r.error,r.error?.message||'',hint])}catch(e){R.push([n,false,e.message,hint])}};
+ for(const t of['profiles','messages','settings','activity','info_posts'])await C('Tabel '+t,()=>sb.from(t).select('*',{count:'exact',head:true}),'Jalankan setup.sql terbaru');
+ await C('Fungsi admin_users',()=>sb.rpc('admin_users'),'Jalankan setup.sql terbaru');
+ await C('Fungsi ensure_profile',()=>sb.rpc('ensure_profile'),'Jalankan setup.sql terbaru');
+ for(const b of['avatars','site'])await C('Storage '+b,()=>sb.storage.from(b).list('',{limit:1}),'Buat bucket '+b+' (Public) atau jalankan setup.sql');
+ R.push(['Koneksi HTTPS',location.protocol==='https:','','Pakai hosting https']);R.push(['Verifikasi Turnstile',!!TURNSTILE_SITEKEY,'','Opsional: isi TURNSTILE_SITEKEY di index.html']);
+ o.innerHTML=R.map(([n,ok,m,hn])=>`<div class="act"><span><b>${esc(n)}</b>${ok?'':`<br><span class="tm">${esc(m||hn)}</span>`}</span><span style="color:${ok?'var(--gr)':'#ff6b86'}">${ok?'OK':'GAGAL'}</span></div>`).join('')}
 async function renderAdmin(){if(!isAd())return go('home');const b=$('#ad');b.innerHTML='<div class="card">Memuat...</div>';
  const[a,c,u,em,ac]=await Promise.all([sb.from('profiles').select('*',{count:'exact',head:true}),sb.from('messages').select('*',{count:'exact',head:true}),
   sb.from('profiles').select('*').order('created_at',{ascending:false}).limit(200),sb.rpc('admin_users'),sb.from('activity').select('*').order('id',{ascending:false}).limit(40)]);
@@ -404,20 +441,22 @@ async function renderAdmin(){if(!isAd())return go('home');const b=$('#ad');b.inn
  const on=us.filter(x=>x.last_seen&&Date.now()-new Date(x.last_seen)<3e5).length,
  ago=t=>{if(!t)return'belum pernah';const m=Math.round((Date.now()-new Date(t))/6e4);return m<1?'online':m<60?m+' mnt lalu':m<1440?Math.round(m/60)+' jam lalu':Math.round(m/1440)+' hari lalu'},
  s=(k,l)=>`<label>${l}</label><input id="s-${k}" value="${esc(S[k]||'')}">`,
- row=x=>{const own=mail[x.id]==='admin@kelas.com',adm=x.role==='admin';return`<div class="m" style="margin-top:8px"><b>@${esc(x.username)}</b> ${bdg(x)}${x.banned?' <span class="tg" style="background:#ff2e48;color:#fff">DIBATASI</span>':''} <span class="tm">${ago(x.last_seen)}</span><div class="tm">${esc(mail[x.id]||'')}</div>
+ row=x=>{const own=mail[x.id]==='admin@kelas.com',adm=x.role==='admin';return`<div class="m" data-s="${esc((x.username+' '+(mail[x.id]||'')).toLowerCase())}" style="margin-top:8px"><b>@${esc(x.username)}</b> ${bdg(x)}${x.banned?' <span class="tg" style="background:#ff2e48;color:#fff">DIBATASI</span>':''} <span class="tm">${ago(x.last_seen)}</span><div class="tm">${esc(mail[x.id]||'')}</div>
  <input data-t="${x.id}" value="${esc(x.title)}" list="tl" maxlength="20">${own||x.id===me.id?'':`<div class="row">${ow?`<button class="btn" data-role="${x.id}:${adm?'member':'admin'}">${adm?'Cabut admin':'Jadikan admin'}</button>`:''}<button class="btn" data-ban="${x.id}:${x.banned?0:1}">${x.banned?'Buka batasan':'Batasi chat'}</button><button class="btn d" data-rm="${x.id}">Hapus akun</button></div>`}</div>`};
  b.innerHTML=`<div class="row"><div class="card">Member<h3>${a.count}</h3></div><div class="card">Pesan<h3>${c.count}</h3></div><div class="card">Online<h3>${on}</h3></div></div>
+ <div class="card"><h3>Cek sistem</h3><small>Periksa tabel, fungsi, dan penyimpanan Supabase.</small><button class="btn p" id="hc-run" style="width:100%;margin-top:8px">Jalankan pemeriksaan</button><div id="hc-out"></div></div>
  <div class="card"><h3>Banner</h3><small>Hanya admin yang bisa mengganti atau menghapus. Video MP4/WebM atau gambar, maks 50 MB.</small><input type="file" id="bn-f" accept="video/mp4,video/webm,image/*"><div class="row"><button class="btn p" id="bn-up">Ganti banner</button><button class="btn d" id="bn-rs">Kembalikan banner awal</button></div></div>
  <div class="card"><h3>Pengaturan situs</h3>${s('channel','Link channel WhatsApp (https://...)')}${s('admin_wa','Nomor admin (628...)')}${s('ig','Instagram (tanpa @)')}${s('info','Informasi / pengumuman di banner')}
  <button class="btn p" id="s-save" style="width:100%;margin-top:8px">Simpan pengaturan</button><button class="btn d" id="s-clear" style="width:100%;margin-top:8px">Bersihkan chat global</button></div>
- <div class="card"><h3>Member</h3><datalist id="tl"><option>Member<option>VIP<option>Moderator<option>Legend<option>Owner</datalist>${us.map(row).join('')}</div>
- <div class="card"><h3>Aktivitas terbaru</h3><button class="btn d" id="ac-clr" style="width:100%;margin:6px 0">Hapus semua aktivitas</button>${(ac.data||[]).map(x=>`<div class="act"><span><b>${esc(x.username||'?')}</b> ${esc(AL[x.action]||x.action)} ${esc(x.detail||'')}<br><span class="tm">${new Date(x.created_at).toLocaleString('id-ID',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</span></span><button class="btn d x" data-ad="${x.id}">hapus</button></div>`).join('')||'<span class="tm">Belum ada aktivitas</span>'}</div>`;
+ <div class="card"><h3>Member</h3><input id="mq" placeholder="Cari member..." autocomplete="off"><datalist id="tl"><option>Member<option>VIP<option>Moderator<option>Legend<option>Owner</datalist>${us.map(row).join('')}</div>
+ <div class="card"><h3>Aktivitas terbaru</h3><button class="btn d" id="ac-clr" style="width:100%;margin:6px 0">Hapus semua aktivitas</button>${(ac.data||[]).map(x=>`<div class="act"><span><b>${esc(x.username||'?')}</b> ${esc(AL[x.action]||x.action)} ${esc(x.detail||'')}<br><span class="tm">${new Date(x.created_at).toLocaleString('id-ID',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</span></span><button class="btn d x" data-ad="${x.id}">hapus</button></div>`).join('')||(ac.error?'<span class="tm">'+esc(ac.error.message)+' (jalankan setup.sql terbaru)</span>':'<span class="tm">Belum ada aktivitas</span>')}</div>`;
+ $('#mq').oninput=e=>{const q=e.target.value.toLowerCase();document.querySelectorAll('#ad .m[data-s]').forEach(r=>r.hidden=!r.dataset.s.includes(q))};$('#hc-run').onclick=healthCheck;
  b.onchange=async e=>{const id=e.target.dataset.t;if(!id)return;const{error}=await sb.from('profiles').update({title:e.target.value.trim()||'Member'}).eq('id',id);error?toast(error.message):toast('Title diubah')};
  b.onclick=async e=>{const t=e.target.closest('button');if(!t)return;const d=t.dataset;let r,ok;
   if(t.id==='bn-up')return bannerUp();if(t.id==='bn-rs')return bannerReset();
   if(t.id==='s-save'){if(!/^https:\/\//.test($('#s-channel').value.trim()))return toast('Link channel harus diawali https://');
-   r=await sb.from('settings').upsert(['channel','admin_wa','ig','info'].map(k=>({key:k,value:$('#s-'+k).value.trim()})));
-   if(!r.error){await loadS();await sb.rpc('log_event',{p_action:'settings',p_detail:'pengaturan diubah'})}ok='Pengaturan tersimpan'}
+   r=await sb.from('settings').upsert(['channel','admin_wa','ig','info'].map(k=>{const v=$('#s-'+k).value.trim();return{key:k,value:k==='admin_wa'?v.replace(/\D/g,''):k==='ig'?v.replace(/[^\w.]/g,''):v}}));
+   if(!r.error){await loadS();await sb.rpc('log_event',{p_action:'settings',p_detail:'link dan info situs'})}ok='Pengaturan tersimpan'}
   else if(t.id==='s-clear'){if(!confirm('Hapus SEMUA pesan chat global?'))return;r=await sb.rpc('admin_clear_chat');ok='Chat dibersihkan'}
   else if(t.id==='ac-clr'){if(!confirm('Hapus semua catatan aktivitas?'))return;r=await sb.from('activity').delete().gt('id',0);ok='Aktivitas dihapus'}
   else if(d.ad){r=await sb.from('activity').delete().eq('id',d.ad);ok='Dihapus'}
@@ -453,6 +492,13 @@ const T={
  'Jadwal Sholat':{f:{kota:'Jakarta'},run:async v=>{const t=(await J('https://api.aladhan.com/v1/timingsByCity?country=Indonesia&method=20&city='+enc(v.kota))).data.timings;return[['Subuh','Fajr'],['Dzuhur','Dhuhr'],['Ashar','Asr'],['Maghrib','Maghrib'],['Isya','Isha']].map(([n,k])=>n+': '+t[k]).join('\n')}},
  'Terjemah':{f:{teks:'Selamat pagi',dari:'id',ke:'en'},run:async v=>(await J(`https://api.mymemory.translated.net/get?q=${enc(v.teks)}&langpair=${enc(v.dari+'|'+v.ke)}`)).responseData.translatedText},
  'QR Code':{f:{teks:'https://whatsapp.com/channel/0029Vb9kIdD2f3ELjmdI5p3i'},run:async v=>({html:`<img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${enc(v.teks)}" width="240" height="240" alt="QR">`})}};
+function calc(s){let i=0;const ws=()=>{while(s[i]===' ')i++},
+ num=()=>{const m=/^\d*\.?\d+/.exec(s.slice(i));if(!m)throw Error('Ekspresi tidak valid');i+=m[0].length;return +m[0]},
+ prim=()=>{ws();const c=s[i];if(c==='('){i++;const v=add();ws();if(s[i++]!==')')throw Error('Kurung tidak seimbang');return v}if(c==='-'){i++;return -prim()}if(c==='+'){i++;return prim()}return num()},
+ pow=()=>{const v=prim();ws();if(s[i]==='^'){i++;return Math.pow(v,pow())}return v},
+ mul=()=>{let v=pow();for(;;){ws();const c=s[i];if(c!=='*'&&c!=='/'&&c!=='%')return v;i++;const r=pow();v=c==='*'?v*r:c==='/'?v/r:v%r}},
+ add=()=>{let v=mul();for(;;){ws();const c=s[i];if(c!=='+'&&c!=='-')return v;i++;const r=mul();v=c==='+'?v+r:v-r}};
+ const r=add();ws();if(i<s.length)throw Error('Ekspresi tidak valid');return r}
 const rnd=n=>{const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]%n},hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''),X=(f,run)=>({f,run,u:1});
 const MO={A:'.-',B:'-...',C:'-.-.',D:'-..',E:'.',F:'..-.',G:'--.',H:'....',I:'..',J:'.---',K:'-.-',L:'.-..',M:'--',N:'-.',O:'---',P:'.--.',Q:'--.-',R:'.-.',S:'...',T:'-',U:'..-',V:'...-',W:'.--',X:'-..-',Y:'-.--',Z:'--..',0:'-----',1:'.----',2:'..---',3:'...--',4:'....-',5:'.....',6:'-....',7:'--...',8:'---..',9:'----.'};
 const UN={m:[1,'p'],km:[1e3,'p'],cm:[.01,'p'],mm:[.001,'p'],mil:[1609.344,'p'],kaki:[.3048,'p'],inci:[.0254,'p'],kg:[1,'b'],g:[.001,'b'],lb:[.45359237,'b'],oz:[.028349523,'b']};
@@ -481,7 +527,7 @@ Object.assign(T,{
  'Caesar':X({teks:'Halo Dunia',geser:'13'},v=>{const n=((+v.geser%26)+26)%26;return v.teks.replace(/[a-z]/gi,c=>{const b=c<'a'?65:97;return String.fromCharCode((c.charCodeAt(0)-b+n)%26+b)})}),
  'Timestamp':X({nilai:String(Date.now()/1000|0)},v=>{const s=v.nilai.trim(),d=/^\d+$/.test(s)?new Date(s.length>11?+s:s*1000):new Date(s);if(isNaN(d))throw Error('Isi epoch atau tanggal');return`Epoch (detik): ${Math.floor(d/1000)}\nISO: ${d.toISOString()}\nLokal: ${d.toLocaleString('id-ID')}`}),
  'Slug':X({teks:'Judul Artikel Keren!'},v=>v.teks.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')),
- 'Kalkulator':X({ekspresi:'(12+8)*3/2'},v=>{const e=v.ekspresi.replace(/,/g,'.');if(!/^[\d+\-*/().%\s^]+$/.test(e))throw Error('Hanya angka dan + - * / ( ) % ^');return String(Function('"use strict";return ('+e.replace(/\^/g,'**')+')')())}),
+ 'Kalkulator':X({ekspresi:'(12+8)*3/2'},v=>String(calc(v.ekspresi.replace(/,/g,'.')))),
  'Lorem Ipsum':X({kata:'30'},v=>{const w='lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'.split(' ');return Array.from({length:Math.min(+v.kata||20,300)},(_,i)=>w[i%w.length]).join(' ')})
 });
 const TC={API:['Cuaca','Kurs','Jadwal Sholat','Terjemah','Wikipedia','Cek IP','DNS Lookup','QR Code'],Teks:['Base64','URL Encode','JSON Format','Hitung Kata','Ubah Huruf','Morse','Caesar','Slug','Lorem Ipsum'],Hitung:['Kalkulator','Satuan','Suhu','BMI','Diskon','Angka Acak','Warna','Umur','Timestamp'],Aman:['Password','Hash','UUID']};
@@ -534,12 +580,24 @@ const B={set(p,m){D('#bbar').style.width=p+'%';D('#bpc').textContent=p+'%';if(m)
   sb.auth.onAuthStateChange((_e,s)=>{if((s?.user?.id||null)===(me?.id||null))return;setTimeout(async()=>{await setUser(s?.user);go(cur==='admin'&&!isAd()?'home':cur)},0)});sb.channel('info').on('postgres_changes',{event:'*',schema:'public',table:'info_posts'},()=>loadInfo()).subscribe()}
  catch(e){D('#bmsg').textContent='gagal terhubung, mode terbatas'}
  go('home');await wait(Math.max(0,2600-(Date.now()-t0)));B.set(100,'sistem siap');D('#bst').textContent='ready';await wait(500);B.end()})();
+/* Deteksi perangkat + penyesuaian desktop */
+const DEV=(()=>{const ua=navigator.userAgent,d=navigator.userAgentData,
+ os=d?.platform||(/Windows/.test(ua)?'Windows':/Android/.test(ua)?'Android':/iPhone|iPad|iPod/.test(ua)?'iOS':/Mac/.test(ua)?'macOS':/Linux/.test(ua)?'Linux':'Perangkat'),
+ br=/Edg\//.test(ua)?'Edge':/OPR\//.test(ua)?'Opera':/Firefox\//.test(ua)?'Firefox':/Chrome\//.test(ua)?'Chrome':/Safari\//.test(ua)?'Safari':'Browser';
+ return{os,br,touch:matchMedia('(pointer:coarse)').matches,get type(){return innerWidth>=900?'desktop':innerWidth>=600?'tablet':'mobile'},get info(){return os+' / '+br+' / '+this.type}}})();
+const setDev=()=>{document.documentElement.dataset.dev=DEV.type;document.documentElement.dataset.input=DEV.touch?'touch':'mouse'};
+addEventListener('resize',setDev);setDev();
+addEventListener('keydown',e=>{if(DEV.touch||e.ctrlKey||e.metaKey||e.altKey||/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName)||document.querySelector('dialog[open]'))return;
+ if(e.key==='/'){e.preventDefault();({chat:'#ci',tools:'#tq',music:'#qs'}[cur]&&$({chat:'#ci',tools:'#tq',music:'#qs'}[cur]))?.focus()}
+ const m={1:'home',2:'chat',3:'info',4:'tools',5:'me'}[e.key];if(m)go(m)});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)return;if(cur==='chat'&&me)loadMsgs();loadInfo()});
+setInterval(()=>{if(!document.hidden&&cur==='chat'&&me&&ch)pollMsgs()},8000);
 /* UX: efek tekan + cahaya, mode mengetik, kontrol media */
 document.addEventListener('pointerdown',e=>{const t=e.target.closest('.btn,.fc,.wide,nav button,.tr,.skip');if(!t||t.disabled)return;
  const r=t.getBoundingClientRect(),s=Math.max(r.width,r.height)*2,d=document.createElement('i');d.className='rip';
- d.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-r.left-s/2}px;top:${e.clientY-r.top-s/2}px`;t.appendChild(d);setTimeout(()=>d.remove(),700);navigator.vibrate?.(8)});
+ d.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-r.left-s/2}px;top:${e.clientY-r.top-s/2}px`;t.appendChild(d);setTimeout(()=>d.remove(),700);DEV.touch&&navigator.vibrate?.(8)});
 const isT=x=>/^(INPUT|TEXTAREA)$/.test(x?.tagName)&&!/^(range|file)$/.test(x.type);
-const kb=()=>document.body.classList.toggle('typing',isT(document.activeElement)&&!!window.visualViewport&&visualViewport.height<innerHeight*.8);
+const kb=()=>document.body.classList.toggle('typing',isT(document.activeElement)&&DEV.touch&&!!window.visualViewport&&visualViewport.height<innerHeight*.8);
 window.visualViewport?.addEventListener('resize',kb);document.addEventListener('focusin',()=>setTimeout(kb,350));document.addEventListener('focusout',()=>setTimeout(kb,200));
 for(const id of['#am','#pm'])$(id).addEventListener('click',e=>{const d=e.currentTarget,r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close()});
 if('mediaSession' in navigator){const ms=navigator.mediaSession;ms.setActionHandler('play',()=>au.play());ms.setActionHandler('pause',()=>au.pause());ms.setActionHandler('nexttrack',()=>$('#nx').click());ms.setActionHandler('previoustrack',()=>$('#pv').click());
