@@ -1,0 +1,8 @@
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://unpkg.com https://challenges.cloudflare.com https://itunes.apple.com; style-src 'self' https://fonts.googleapis.com; style-src-attr 'unsafe-inline'; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob: https://*.supabase.co https://api.qrserver.com https://*.anilist.co https://cdn.myanimelist.net https://static.tvmaze.com; media-src 'self' blob: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://api.aladhan.com https://open.er-api.com https://api.mymemory.translated.net https://id.wikipedia.org https://api.ipify.org https://dns.google https://graphql.anilist.co https://api.jikan.moe https://data.bmkg.go.id https://date.nager.at https://api.coingecko.com https://restcountries.com https://ipwho.is https://archive.org https://cors.archive.org https://api.alquran.cloud https://www.googleapis.com https://api.tvmaze.com https://earthquake.usgs.gov https://api.wheretheiss.at https://speed.cloudflare.com https://de1.api.radio-browser.info https://de2.api.radio-browser.info https://nl1.api.radio-browser.info https://at1.api.radio-browser.info; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Cross-Origin-Opener-Policy: same-origin

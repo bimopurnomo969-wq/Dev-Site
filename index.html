@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050305">
+<meta name="cx-build" content="v8-aman-multifile">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://unpkg.com https://challenges.cloudflare.com https://itunes.apple.com; style-src 'self' https://fonts.googleapis.com; style-src-attr 'unsafe-inline'; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob: https://*.supabase.co https://api.qrserver.com https://*.anilist.co https://cdn.myanimelist.net https://static.tvmaze.com; media-src 'self' blob: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.open-meteo.com https://geocoding-api.open-meteo.com https://air-quality-api.open-meteo.com https://api.aladhan.com https://open.er-api.com https://api.mymemory.translated.net https://id.wikipedia.org https://api.ipify.org https://dns.google https://graphql.anilist.co https://api.jikan.moe https://data.bmkg.go.id https://date.nager.at https://api.coingecko.com https://restcountries.com https://ipwho.is https://archive.org https://cors.archive.org https://api.alquran.cloud https://www.googleapis.com https://api.tvmaze.com https://earthquake.usgs.gov https://api.wheretheiss.at https://speed.cloudflare.com https://de1.api.radio-browser.info https://de2.api.radio-browser.info https://nl1.api.radio-browser.info https://at1.api.radio-browser.info; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<script src="guard.js"></script>
+<title>ChronoXStar</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<link rel="stylesheet" href="app.css"></head><body>
+<div id="nojs" style="position:fixed;inset:0;z-index:2147483000;background:#050a16;color:#eaf0ff;font:14px system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;text-align:center"><b style="font-size:18px;letter-spacing:.2em">CHRONOXSTAR</b><span>Memuat aplikasi...</span><small style="max-width:440px;opacity:.75;line-height:1.5">Jika layar ini tidak berubah dalam beberapa detik: pastikan file index.html, app.js, app.css, config.js, dan guard.js ada di folder yang sama dan namanya persis seperti itu.</small></div>
+<noscript><div style="position:fixed;inset:0;z-index:2147483001;background:#050a16;color:#fff;padding:24px;font:14px system-ui">Situs ini membutuhkan JavaScript. Aktifkan JavaScript di browser.</div></noscript>
+<canvas id="fx"></canvas>
+<div id="boot"><div class="bgtxt">CHRONO XSTAR</div><button class="skip" id="bskip">Lewati</button>
+<div class="bc"><small>ChronoXStar</small><small>System boot v1.0</small>
+ <div class="blg"><i></i>C</div><h2 class="bt">CHRONOXSTAR PLATFORM</h2>
+ <div class="pills"><span id="k1">SECURE</span><span id="k2">ONLINE</span><span id="k3">DATABASE</span><span id="k4">SESSION</span></div>
+ <div class="bp"><div><span>MEMUAT SISTEM</span><b id="bpc">0%</b></div><div class="bar"><i id="bbar"></i></div><em id="bmsg">menyiapkan sistem...</em></div>
+ <div class="bs"><div><b class="g" id="bnet">ONLINE</b><small>jaringan</small></div><div><b>PROTOCOL</b><small id="bpr">HTTPS</small></div><div><b class="g">STATUS</b><small id="bst">booting</small></div><div><b>BUILD</b><small>v8 aman</small></div></div>
+ <span class="spl" id="bsec">KONEKSI AMAN</span></div></div>
+
+<header><b class="logo">Chrono<i>X</i>Star</b><button class="btn" id="lg">Masuk</button></header>
+
+<section class="v" id="v-home">
+ <div class="gl ucard" id="uc"><div class="av"><span id="uav"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></span><i class="dot"></i></div>
+  <div class="ui"><small>User</small><b id="un">Tamu</b><span id="ub"></span><span class="acc" id="uacc"></span></div>
+  <div class="st"><div><small>Status</small><b id="us">GUEST</b></div><div><small>Waktu</small><b id="clk">--:--:--</b></div></div></div>
+ <div class="gl feed"><div class="hero" id="hero"><video id="hv" src="banner.mp4" poster="poster.jpg" autoplay muted loop playsinline></video>
+  <i class="cn a"></i><i class="cn b"></i><i class="cn c"></i><i class="cn d"></i><span class="live">LIVE FEED</span>
+  <div class="ov"><span class="kick shim">Komunitas Digital</span><br><h1 class="wm glt" id="hw" data-t="CHRONOXSTAR">CHRONOXSTAR</h1><p class="ty"><span id="ty"></span></p></div></div>
+  <div class="tick"><span id="tk"></span></div></div>
+ <div class="mp gl"><button class="btn p" id="pp" aria-label="Putar"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+  <div><b id="pt">Putar lagu ChronoXStar</b><span class="tm">Pemutar musik<i class="eq"><s></s><s></s><s></s><s></s></i></span></div><button class="btn" data-go="music">Buka</button></div>
+ <div class="grid2">
+  <button class="gl fc" data-go="chat"><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M9 10.5h.01M12 10.5h.01M15 10.5h.01"/></svg></span><small>Global</small><b>CHAT</b><u>&rsaquo;</u></button>
+  <button class="gl fc" data-go="music"><span class="ico"><svg viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg></span><small>Player</small><b>MUSIK</b><u>&rsaquo;</u></button>
+  <button class="gl fc" data-go="tools"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></span><small>API gratis</small><b>TOOLS</b><u>&rsaquo;</u></button>
+  <button class="gl fc" data-go="me"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></span><small>Profil</small><b>AKUN</b><u>&rsaquo;</u></button>
+ </div>
+ <button class="gl wide" data-go="info"><small>Informasi</small><span class="lv" id="ilv" hidden>BARU</span><p id="ip">Belum ada informasi</p></button>
+ <button class="gl wide" data-go="chat"><small>Global chat</small><span class="lv">LIVE</span><p id="cp">Masuk untuk melihat chat</p></button>
+ <div class="gl chn"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 001 1h3l6 4V6L7 10H4a1 1 0 00-1 1zM17 9a4 4 0 010 6"/></svg></span><div><small>Channel WhatsApp</small><b>Update dan pengumuman</b></div><a class="btn p" id="l-ch" target="_blank" rel="noopener noreferrer">GABUNG</a></div>
+ <div class="row"><a class="btn" id="l-wa" target="_blank" rel="noopener noreferrer">Hubungi Admin</a><a class="btn" id="l-ig" target="_blank" rel="noopener noreferrer">Instagram</a></div>
+</section>
+
+<section class="v" id="v-chat" hidden>
+ <h2 class="sec">Chat <em>Global</em></h2><div id="pin" class="card" data-go="info" hidden></div>
+ <div id="cg" class="card">Masuk atau daftar dulu untuk ikut Chat Global.<br><br><button class="btn p" data-act="login">Masuk / Daftar</button></div>
+ <div id="cf" hidden><div id="oc" class="tm"></div><div id="bn" class="card" hidden>Akun kamu sedang dibatasi admin, jadi belum bisa mengirim pesan.</div><div id="msgs"></div>
+ <button id="nm" class="btn p" hidden>Pesan baru</button><form id="cfm" class="cmp"><input id="ci" maxlength="500" placeholder="Tulis pesan..." autocomplete="off"><button class="btn" id="snd" aria-label="Kirim"><svg viewBox="0 0 24 24"><path d="M3 11l18-8-8 18-2-7z"/></svg></button></form></div>
+</section>
+
+<section class="v" id="v-music" hidden>
+ <h2 class="sec">Lagu</h2>
+ <div class="card"><b id="pt2">Pilih lagu</b>
+ <input type="range" id="pr" value="0" max="100">
+ <div class="row" style="margin:0;justify-content:space-between"><small id="tcur">0:00</small><small id="tdur">0:00</small></div>
+ <div class="row"><button class="btn" id="pv" aria-label="Sebelumnya"><svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button><button class="btn p" id="sp" aria-label="Putar"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><button class="btn" id="nx" aria-label="Berikutnya"><svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM4 5l11 7-11 7z"/></svg></button><button class="btn d" id="st" aria-label="Stop"><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg></button></div>
+ <div class="row"><button class="btn" id="sh">Acak: mati</button><button class="btn" id="rp">Ulang: mati</button></div>
+ <label>Volume</label><input type="range" id="vol" min="0" max="100" value="100"></div>
+ <div class="card"><h3>Lagu ChronoXStar</h3><div id="ll"></div></div>
+ <div class="card"><h3>Cari lagu (preview 30 detik)</h3><div class="row" style="flex-wrap:nowrap"><input id="qs" placeholder="Judul atau artis"><button class="btn p" id="qb" style="flex:0 0 auto">Cari</button></div><div id="rl"></div></div>
+ <div class="card"><h3>Radio online</h3><div class="row" style="flex-wrap:nowrap"><input id="rq" placeholder="Nama siaran (kosong = populer di Indonesia)"><button class="btn p" id="rb" style="flex:0 0 auto">Cari</button></div><div id="rr"></div></div>
+</section>
+
+<section class="v" id="v-tools" hidden><h2 class="sec">Tools</h2>
+ <div id="tl-list"><input id="tq" placeholder="Cari tools..." autocomplete="off"><div class="chips" id="tcat"></div><div class="grid2" id="tgrid"></div></div>
+ <div id="tl-run" hidden><button class="btn" id="tback">Kembali ke semua tools</button><div id="tf" class="card"></div></div></section>
+<section class="v" id="v-info" hidden><h2 class="sec">Informasi</h2>
+ <form id="inf" class="card" hidden><h3>Terbitkan informasi</h3><input id="it" maxlength="80" placeholder="Judul"><textarea id="ib" rows="3" maxlength="1000" placeholder="Isi informasi"></textarea><input id="il" maxlength="300" placeholder="Tautan (opsional, https://...)"><button class="btn p" style="width:100%;margin-top:6px">Terbitkan</button></form>
+ <div id="ilist"></div></section>
+<section class="v" id="v-me" hidden><div id="me"></div></section>
+<section class="v" id="v-admin" hidden><h2 class="sec">Dashboard <em>Admin</em></h2><div id="ad"></div></section>
+
+<nav>
+ <button data-go="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>Beranda</button>
+ <button data-go="chat"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>Chat</button>
+ <button data-go="info"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><i class="bd" id="ibd" hidden></i>Info</button>
+ <button data-go="tools"><svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>Tools</button>
+ <button data-go="me"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Akun</button>
+ <button data-go="admin" id="nadmin" hidden><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>Admin</button>
+</nav>
+
+<dialog id="am"><form id="af"><h3 id="am-t">Masuk</h3>
+ <input id="ae" type="email" placeholder="Email" required autocomplete="email">
+ <input id="au" placeholder="Username (3-20 huruf/angka/_)" hidden maxlength="20">
+ <input id="ap" type="password" placeholder="Password (min. 8 untuk daftar)" required autocomplete="current-password"><div id="hc" hidden><label id="hq"></label><input id="ha" inputmode="numeric" placeholder="Jawaban" autocomplete="off"></div><div id="tsb"></div><input id="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;opacity:0">
+ <button class="btn p" style="width:100%;margin-top:6px">Lanjut</button>
+ <button type="button" class="btn" id="am-sw" style="width:100%;margin-top:6px;border:0">Belum punya akun? Daftar</button><button type="button" class="btn" style="width:100%;margin-top:6px;border:0" data-act="close-am">Batal</button></form></dialog>
+<dialog id="pm"><div id="pm-b"></div><button class="btn" style="width:100%;margin-top:10px" data-act="close-pm">Tutup</button></dialog>
+<div id="ts" hidden></div>
+<div id="fp" hidden><b id="fpt"></b><button class="btn" id="fpv" aria-label="Sebelumnya"><svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button><button class="btn p" id="fpp" aria-label="Putar atau jeda"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button><button class="btn" id="fpn" aria-label="Berikutnya"><svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM4 5l11 7-11 7z"/></svg></button><button class="btn d" id="fps" aria-label="Stop"><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg></button></div>
+<audio id="cxaudio" preload="none"></audio>
+
+<script src="app.js"></script></body></html>
